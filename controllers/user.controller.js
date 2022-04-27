@@ -68,7 +68,7 @@ var signUp = async (req, res) => {
         } else {
             const salt = await bcrypt.genSalt()
             const hashedPassword = await bcrypt.hash(req.body.password, salt)
-            //`id`, `role`, `name`, `password`, `email`
+            // const role = "admin";
             db.query("INSERT INTO users ( role, name, password, email) VALUES (?,?,?,?)", [role, name, hashedPassword, email], (err, result) => {
                 if (err) {
                     res.send(err)

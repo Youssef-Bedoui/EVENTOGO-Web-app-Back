@@ -36,7 +36,7 @@ CREATE TABLE  favorite(
 -- Déchargement des données de la table `users`
 --
 INSERT INTO `users` (`id`,`role`,`name`,`password`,`email`) VALUES
-(1,"admin","admin","$10$XzrguQM4RE3P6TOVkyNH9uY1/9w6lQT7X/A07VpyOYbcR2z3UGFm6","admin@gmail.com");
+(1,"admin","admin","123","admin@gmail.com");
 
 
 INSERT INTO `events` (`id`,`title`,`description`,`date`,`image`,`type`) VALUES
