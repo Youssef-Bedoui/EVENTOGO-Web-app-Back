@@ -1,126 +1,38 @@
 const express = require("express");
-
-const userRoutes = require('./routes/user.routes');
-const eventRoutes = require('./routes/event.routes')
-const favoriteRoutes =require('./routes/favorite.routes')
-const bodyParser= require('body-parser')
-
+const userRoutes = require("./routes/user.routes");
+const eventRoutes = require("./routes/event.routes");
+const favoriteRoutes = require("./routes/favorite.routes");
+const interestedRoutes = require("./routes/interested.routes");
+const sendEmailRoutes = require("./routes/sendEmail.routes");
 const app = express();
-const PORT = process.env.PORT || 3000
-const cors = require('cors');
+const PORT = process.env.PORT || 3000;
+const cors = require("cors");
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/../client/public"));
-app.use(bodyParser.json({limit: '50mb'}));
 
 
 
 app.use("/api/user", userRoutes);
 app.use("/api/event", eventRoutes);
-app.use("/api/favorite",favoriteRoutes)
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-/**
- *Slim : Events/getAll 
- */
+app.use("/api/favorite", favoriteRoutes);
+app.use("/api/interested", interestedRoutes);
+app.use("/api/sendEmail", sendEmailRoutes);
 
-
-
-
-
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-
-// Youssef : Events/add 
 app.post("/addEvent", (req, res) => {
-  items.addEvent(title, description, date, image, type, (err, events) => {
+  const { image, title, description, date, type } = req.body;
+  eventRoutes.addEvent(title, description, date, image, type, (err, events) => {
     if (err) {
-      console.log(err)
+      console.log(err);
+      res.status(500).json({ error: "Internal server error" });
+    } else {
+      res.json(events);
     }
-    else {
-      res.json(events)
-    }
-  })
-})
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-//Youssef : Events/delete
-// app.delete("/deleteEvent", (req, res) => {
-//   items.deleteEvent(id, (err, events) => {
-//     if (err) {
-//       console.log(err)
-//     }
-//     else {
-//       res.json(events)
-//     }
-//   })
-// })
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-//  Youssef : Events/put
-// app.modif("/deleteEvent", (req, res) => {
-//   items.modifEvent(id, (err, events) => {
-//     if (err) {
-//       console.log(err)
-//     }
-//     else {
-//       res.json(events)
-//     }
-//   })
-// })
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-/**
- * Fradj : User/getAll
- */
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-/**
- * Fradj : User/remove
- */
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
+  });
+});
 
 app.listen(PORT, function () {
-  console.log("listening on port 3000!");
+  console.log(`listening on port ${PORT}!`);
 });

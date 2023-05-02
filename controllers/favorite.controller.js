@@ -1,86 +1,43 @@
-var db = require("../database-mysql");
-const bcrypt = require("bcrypt")
+const db = require("../database-mysql");
 
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-/**
- * Fradj : User/getAll
- */
-
-
-var selectAll = function (req, res) {
-    db.query("SELECT * FROM favorite", (err, items, fields) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.status(200).send(items);
-        }
-    });
+const selectAll = (req, res) => {
+  const { id } = req.params;
+  const sql = `SELECT * FROM favorite INNER JOIN events ON favorite.id_event=events.id WHERE id_user= ?`;
+  db.query(sql, id, (err, items) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(items);
+    }
+  });
 };
 
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-/**
- * Ali : profile/selectOne
- */
-
-
-//  var selectOne = function (req, res) {
-//     const email=req.params.email;
-
-//     console.log("sent email", email);
-//     db.query(`SELECT * FROM users WHERE email = ?`, email, (err,result) => {
-//       if (err) {
-//         res.status(500).send(err);
-//       } else {
-//         res.status(201).json(result);
-//       }
-//     });
-//   };
-
-
-
-
-
-
-
-
-// function remove one user
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-
-//khairi: user/signUp
-var addFavorite=(req,res)=>{
-    const obj=req.body
-    db.query('insert into favorite set ?',obj,(err,result)=>{
-        if(err)
-        res.send(err)
-        else
-        res.send(result)
-    })
-    
-}
-
-//khairi: user/signIn
-var deleteFavorite=(req,res)=>{
-    var id= req.params.id
-    db.query(`delete from favorite where id=${id}`,(err,result)=>{
-        if(err)
-        res.send(err)
-        else
-        res.send(result)
-    } )
-}
-
-
-
-
-
-module.exports = { 
-selectAll,
-addFavorite,
-deleteFavorite
+const addFavorite = (req, res) => {
+  const sql = `INSERT into favorite set ?`;
+  db.query(sql, req.body, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else res.send(result);
+  });
 };
 
+const deleteFavorite = (req, res) => {
+  const { id_event } = req.params;
+  const { id_user } = req.body;
+  console.log(id_event, id_user);
+  const sql = `DELETE FROM favorite WHERE id_user = ? AND id_event= ?`;
+  db.query(sql, [id_user, id_event], (err, result) => {
+    if (err) {
+      res.send(err);
+    } else {
+      console.log(result);
+      res.send(result);
+    }
+  });
+};
 
+module.exports = {
+  selectAll,
+  addFavorite,
+  deleteFavorite,
+};
